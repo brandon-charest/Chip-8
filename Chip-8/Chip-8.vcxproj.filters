@@ -27,4 +27,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Chip8_Opcodes.txt" />
+  </ItemGroup>
 </Project>

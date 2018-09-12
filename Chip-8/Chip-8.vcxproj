@@ -152,6 +152,9 @@
   <ItemGroup>
     <ClInclude Include="chip8.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Chip8_Opcodes.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
