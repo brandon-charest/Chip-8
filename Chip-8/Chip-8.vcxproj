@@ -148,9 +148,11 @@
   <ItemGroup>
     <ClCompile Include="chip8.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="rom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chip8.h" />
+    <ClInclude Include="rom.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\Chip8_Opcodes.txt" />
