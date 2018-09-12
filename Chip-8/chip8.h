@@ -8,7 +8,6 @@ public:
 
 	bool drawFlag;
 
-
 	void emulateCycle();
 	void debugRender();
 	bool loadApplication(char* const fileName);
