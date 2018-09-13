@@ -1,8 +1,10 @@
 #include "chip8.h"
 #include <iostream>
+#include <random>
+
+
 /*
-see http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.4
-for more info
+see http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.4 for more info
 
 Example of chip 8 fonts
 "0"			Binary			Hex
@@ -34,7 +36,9 @@ static array<uint8_t, 80> chip8_fontset =
 };
 
 chip8::chip8()
-{
+{	
+	
+	
 }
 
 
@@ -84,7 +88,7 @@ void chip8::emulateCycle()
 			// Put the stored return address from the stack back into the program counter		
 			m_program_counter = m_stack.top();
 			m_stack.pop();			
-
+			break;
 		default:
 			std::cout << "Unknown opcode [0x0000]: 0x" << m_opcode << "\n";
 			break;
@@ -149,9 +153,11 @@ void chip8::emulateCycle()
 			break;
 
 		case 0x0004: // Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.
-			uint16_t sum = m_V[X] + m_V[Y];
-			m_V[0xF] = sum > 255;
-			m_V[X] = sum & 0xFF;
+			{
+				uint16_t sum = m_V[X] + m_V[Y];
+				m_V[0xF] = sum > 255;
+				m_V[X] = sum & 0xFF;			
+			}			
 			break;
 
 		case 0x0005: // VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
@@ -180,32 +186,77 @@ void chip8::emulateCycle()
 
 		break;
 
-	case 0x9000:
-
+	case 0x9000: // Skips the next instruction if VX doesn't equal VY. (Usually the next instruction is a jump to skip a code block)
+		if (m_V[X] != m_V[Y])
+		{
+			m_program_counter += 2;
+		}
 		break;
 
-	case 0xA000:
-
+	case 0xA000: // Sets I to the address NNN.
+		m_index_register = NNN;
 		break;
 
-	case 0xB000:
-
+	case 0xB000: // Jumps to the address NNN plus V0.
+		m_program_counter = NNN + m_V[0];
 		break;
 
-	case 0xC000:
-
+	case 0xC000: // Sets VX to the result of a bitwise and operation on a random number (Typically: 0 to 255) and NN.
+		m_V[X] = random_number() & NN;
 		break;
 
-	case 0xD000:
-
+	case 0xD000: // Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels. 
+				 // Each row of 8 pixels is read as bit-coded starting from memory location I; I value doesn’t change after the execution of this instruction. 
+				 // As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn, and to 0 if that doesn’t happen		
 		break;
 
 	case 0xE000:
+		switch (NN)
+		{
+		case 0x009E:
 
+			break;
+
+		case 0X00A1:
+
+			break;
+
+		default:
+			std::cout << "Unknown opcode [0xE000]: 0x" << m_opcode << "\n";
+			break;
+		}
 		break;
 
 	case 0xF000:
+		switch (NN)
+		{
+		case 0x0007:
+			break;
 
+		case 0x000A:
+			break;
+
+		case 0x0015:
+			break;
+
+		case 0x0018:
+			break;
+
+		case 0x001E:
+			break;
+
+		case 0x0029:
+			break;
+
+		case 0x0033:
+			break;
+
+		case 0x0055:
+			break;
+		default:
+			std::cout << "Unknown opcode [0xF000]: 0x" << m_opcode << "\n";
+			break;
+		}
 		break;
 
 	default:
@@ -237,6 +288,9 @@ void chip8::init()
 	m_V = {};
 	m_memory = {};
 	
+	
+
+
 	while (!m_stack.empty())
 	{
 		m_stack.pop();
@@ -249,4 +303,12 @@ void chip8::init()
 	}
 
 	drawFlag = true;
+}
+
+uint8_t chip8::random_number() const
+{
+	static std::mt19937 rng(std::random_device{}());
+	static std::uniform_real_distribution<float> dist(0.0, 255.0);
+
+	return dist(rng);
 }

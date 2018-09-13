@@ -3,11 +3,10 @@
 #include "rom.h"
 #include <cstdint>
 #include <array>
-using std::array;
-
 #include <stack>
-using std::stack;
 
+using std::stack;
+using std::array;
 
 class chip8
 {
@@ -29,6 +28,8 @@ public:
 	array<uint8_t, 16> key;
 
 	uint8_t get_pixel(int x, int y);
+
+	
 
 private:
 	uint16_t m_program_counter;
@@ -52,6 +53,8 @@ private:
 	void make_beep();
 
 	void init();
+	
+	uint8_t random_number() const;
 };
 
 

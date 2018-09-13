@@ -3,22 +3,17 @@
 
 
 
+//TODO: Get SDL or OpenGL for screen/sound/and keyboard input
+//TODO: Finish opcodes
+//TODO: Finish way to load roms
+//TODO: create roms???
 
 
-chip8 myChip8;
 
 
-
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-	if (argc < 2)
-	{
-		std::cout << "Usage: chip8.exe chip8application\n\n";
-		return 1;
-	}
-
-	
-	
+	chip8 myChip8;
 
 
 	return 0;
