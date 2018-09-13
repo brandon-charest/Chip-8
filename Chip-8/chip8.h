@@ -36,6 +36,7 @@ private:
 	uint16_t m_opcode;
 	uint16_t m_index_register;
 	uint16_t m_stack_pointer;	
+
 	//array<uint16_t, 16> m_stack;
 	stack<uint16_t> m_stack;
 

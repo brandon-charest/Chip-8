@@ -47,17 +47,26 @@ void chip8::emulateCycle()
 	// Fetch opcode, opcode is two bytes
 	m_opcode = m_memory[m_program_counter] << 8 | m_memory[m_program_counter + 1]; 
 
+	//  address
 	uint16_t const NNN = m_opcode & 0x0FFF;
+
+	// 8-bit constant
 	uint8_t const NN = m_opcode & 0x00FF;
+
+	// 4-bit constant
 	uint8_t const N = m_opcode & 0x000F;
+
+	// 4-bit register identifier
 	uint8_t const X = (m_opcode & 0x0F00) >> 8;
+
+	// 4-bit register identifier
 	uint8_t const Y = (m_opcode & 0x00F0) >> 4;
 
 	m_program_counter += 2;
 
 	switch (m_opcode & 0xF000)
 	{
-	// ANNN
+	// 0NNN
 	case 0x0000:
 
 		switch (NN)
@@ -132,31 +141,37 @@ void chip8::emulateCycle()
 			break;
 
 		case 0x0002: // Sets VX to VX and VY. (Bitwise AND operation)
-			
+			m_V[X] &= m_V[Y];
 			break;
 
 		case 0x0003: // Sets VX to VX xor VY.
-			
+			m_V[X] ^= m_V[Y];
 			break;
 
 		case 0x0004: // Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there isn't.
-			
+			uint16_t sum = m_V[X] + m_V[Y];
+			m_V[0xF] = sum > 255;
+			m_V[X] = sum & 0xFF;
 			break;
 
 		case 0x0005: // VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
-			
+			m_V[0xF] = m_V[X] > m_V[Y];
+			m_V[X] -= m_V[Y];
 			break;
 
 		case 0x0006: // Stores the least significant bit of VX in VF and then shifts VX to the right by 1.
-			
+			m_V[0xF] = m_V[X] & 0x01;
+			m_V[X] >>= 1;
 			break;
 
 		case 0x0007: // Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when there isn't.
-			
+			m_V[0xF] = m_V[Y] > m_V[X];
+			m_V[X] = m_V[Y] - m_V[X];
 			break;
 
-		case 0x000E: // 	Stores the most significant bit of VX in VF and then shifts VX to the left by 1.
-			
+		case 0x000E: // Stores the most significant bit of VX in VF and then shifts VX to the left by 1.
+			m_V[0xF] = (m_V[X] & 0x80) >> 7;
+			m_V[X] <<= 1;
 			break;
 		default:
 			std::cout << "Unknown opcode [0x8000]: 0x" << m_opcode << "\n";
@@ -164,6 +179,35 @@ void chip8::emulateCycle()
 		}
 
 		break;
+
+	case 0x9000:
+
+		break;
+
+	case 0xA000:
+
+		break;
+
+	case 0xB000:
+
+		break;
+
+	case 0xC000:
+
+		break;
+
+	case 0xD000:
+
+		break;
+
+	case 0xE000:
+
+		break;
+
+	case 0xF000:
+
+		break;
+
 	default:
 		break;
 	}
