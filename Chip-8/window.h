@@ -14,21 +14,16 @@ public:
 	void const Init() const;
 	void const Quit() const;
 
+	windowState currentWindowState();
+
 private:
+	void Clear();
+	void Update();
 
-	struct SDL_Deleter {
-		void operator()(SDL_Surface*  ptr) { if (ptr) SDL_FreeSurface(ptr); }
-		void operator()(SDL_Texture*  ptr) { if (ptr) SDL_DestroyTexture(ptr); }
-		void operator()(SDL_Renderer* ptr) { if (ptr) SDL_DestroyRenderer(ptr); }
-		void operator()(SDL_Window*   ptr) { if (ptr) SDL_DestroyWindow(ptr); }
-		void operator()(SDL_RWops*    ptr) { if (ptr) SDL_RWclose(ptr); }
-	};
-
-
-	using m_windowPtr = std::unique_ptr<SDL_Window, SDL_Deleter>;
-	using m_rendererPtr = std::unique_ptr<SDL_Renderer, SDL_Deleter>;
 	
-	SDL_Rect m_box;
+	static std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> m_rendererPtr;
+	static std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> m_windowPtr;	
+	static SDL_Rect m_box;
 
 	windowState m_windowState;
 	int const m_screenHeight;

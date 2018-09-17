@@ -274,35 +274,58 @@ void chip8::loadFromRom(string const fileName)
 	
 }
 
+void chip8::make_beep()
+{
+}
+
+void chip8::clear_stack()
+{
+	while (!m_stack.empty())
+	{
+		m_stack.pop();
+	}
+}
+
+void chip8::clear_registers()
+{
+	m_V = {};
+}
+
+void chip8::clear_memory()
+{
+	m_memory = {};
+}
+
 void chip8::init()
 {
 	// program counter starts at memory location 512 (0x200) 
 	m_program_counter = memory_start;
 	m_opcode = 0;
 	m_index_register = 0;
-	m_delay_timer = 0;
-	m_sound_timer = 0;
+	
+
+	clear_stack();
+	clear_registers();
+	clear_memory();
 
 	gfx = {};
 	key = {};
-	m_V = {};
-	m_memory = {};
 	
+	load_fontset(m_memory, chip8_fontset);	
 	
-
-
-	while (!m_stack.empty())
-	{
-		m_stack.pop();
-	}
-	
-	// load fontset to memory
-	for (int i = 0; i < sizeof(chip8_fontset); ++i)
-	{
-		m_memory[i] = chip8_fontset[i];
-	}
+	m_delay_timer = 0;
+	m_sound_timer = 0;
 
 	drawFlag = true;
+}
+
+void chip8::load_fontset(array<uint8_t, 4096> memory, array<uint8_t, 80> fontset)
+{
+	// load fontset to memory
+	for (int i = 0; i < sizeof(fontset); ++i)
+	{
+		memory[i] = fontset[i];
+	}
 }
 
 uint8_t chip8::random_number() const

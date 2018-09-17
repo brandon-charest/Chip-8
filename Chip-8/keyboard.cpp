@@ -21,6 +21,8 @@ void const keyboard::processInput()
 	{
 		switch (inputEvent.type)
 		{
+		case SDL_QUIT:
+			
 		default:
 			break;
 		}
