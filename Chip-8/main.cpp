@@ -1,7 +1,7 @@
 #include "chip8.h"
 #include "window.h"
 
-
+//TODO: Implement keyboard
 //TODO: Finish opcodes
 //TODO: Finish way to load roms
 //TODO: create roms???

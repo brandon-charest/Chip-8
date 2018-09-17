@@ -2,6 +2,8 @@
 #include <SDL.h>
 #include <memory>
 
+enum class windowState{PLAY,QUIT};
+
 class window
 {
 public:
@@ -28,7 +30,7 @@ private:
 	
 	SDL_Rect m_box;
 
-
+	windowState m_windowState;
 	int const m_screenHeight;
 	int const m_screenWidth;
 
