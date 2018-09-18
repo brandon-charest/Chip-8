@@ -7,7 +7,9 @@ public:
 	keyboard();
 	~keyboard();
 
-	void const processInput();
-	
+	void processInput();
+private:
+	void keyDown(SDL_Keycode key);
+	void keyUp(SDL_Keycode key);
 };
 

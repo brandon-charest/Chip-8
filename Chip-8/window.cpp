@@ -1,5 +1,7 @@
 #include "window.h"
 #include "errors.h"
+#include "chip8.h"
+#include "keyboard.h"
 #include <iostream>
 #include <GL\glew.h>
 
@@ -7,9 +9,12 @@
 std::unique_ptr<SDL_Window, void(*)(SDL_Window*)> window::m_windowPtr = std::unique_ptr<SDL_Window, void(*)(SDL_Window*)>(nullptr, SDL_DestroyWindow);
 std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> window::m_rendererPtr = std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)>(nullptr, SDL_DestroyRenderer);
 
-window::window() : m_screenHeight(64), m_screenWidth(32) 
+windowState window::m_windowState;
+
+window::window() : m_screenHeight(800), m_screenWidth(600) 
 {
-	m_windowState = windowState::PLAY;
+
+	window::m_windowState = windowState::PLAY;
 }
 
 window::~window()
@@ -49,7 +54,7 @@ void const window::Init() const
 		fatalError("Could not initialize glew!");
 	}
 
-	
+	window::PlayLoop();
 }
 
 
@@ -65,10 +70,16 @@ void const window::Quit() const
 	SDL_Quit();
 }
 
-windowState window::currentWindowState()
+windowState window::getCurrentWindowState()
 {
-	return m_windowState;
+	return window::m_windowState;
 }
+
+void window::setCurrentWindowState(windowState state)
+{
+	window::m_windowState = state;
+}
+
 
 void window::Clear()
 {	
@@ -78,4 +89,19 @@ void window::Clear()
 void window::Update()
 {
 	SDL_RenderPresent(m_rendererPtr.get());
+}
+
+void const window::PlayLoop() const
+{
+	chip8 myChip8;
+	keyboard keyboard;
+	int quit = 0;
+
+	while (window::m_windowState != windowState::QUIT)
+	{
+		//myChip8.emulateCycle();
+		keyboard.processInput();
+	}	
+
+	window::Quit();
 }
