@@ -1,12 +1,10 @@
 #include "window.h"
 
-//TODO: Implement keyboard
 //TODO: Finish opcodes
 //TODO: Finish way to load roms
+//TODO: Graphics rendering
+//TODO: Sound
 //TODO: create roms???
-
-
-
 
 int main(int argc, char *argv[])
 {	

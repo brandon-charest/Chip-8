@@ -8,8 +8,12 @@ public:
 	~keyboard();
 
 	void processInput();
+
 private:
-	void keyDown(SDL_Keycode key);
-	void keyUp(SDL_Keycode key);
+
+	void keyEvent(SDL_Keycode key, uint8_t e);
+	uint8_t keyEventHelper(uint8_t keyEvent);
+	
+	uint8_t keyState[16];
 };
 

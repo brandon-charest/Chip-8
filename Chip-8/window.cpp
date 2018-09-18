@@ -13,7 +13,6 @@ windowState window::m_windowState;
 
 window::window() : m_screenHeight(800), m_screenWidth(600) 
 {
-
 	window::m_windowState = windowState::PLAY;
 }
 
@@ -60,7 +59,6 @@ void const window::Init() const
 
 void const window::Quit() const
 {
-
 	SDL_DestroyRenderer(m_rendererPtr.get());
 	SDL_DestroyWindow(m_windowPtr.get());
 
@@ -95,7 +93,6 @@ void const window::PlayLoop() const
 {
 	chip8 myChip8;
 	keyboard keyboard;
-	int quit = 0;
 
 	while (window::m_windowState != windowState::QUIT)
 	{

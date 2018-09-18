@@ -20,6 +20,7 @@ public:
 
 	static windowState getCurrentWindowState();
 	static void setCurrentWindowState(windowState state);
+
 private:
 	void Clear();
 	void Update();
@@ -31,11 +32,6 @@ private:
 
 	static windowState m_windowState;
 	int const m_screenHeight;
-	int const m_screenWidth;
-
-	
-
-protected:
-	
+	int const m_screenWidth;	
 };
 
