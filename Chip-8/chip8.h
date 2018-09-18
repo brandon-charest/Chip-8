@@ -24,12 +24,7 @@ public:
 	// Screen has a total of 2048 pixels (64 x 32)	
 	array<uint8_t, 64 * 32> gfx;
 
-	// Chip 8 uses hex based keypad (0x0-0xF)	
-	array<uint8_t, 16> key;
-
 	uint8_t get_pixel(int x, int y);
-
-	
 
 private:
 

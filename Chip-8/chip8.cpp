@@ -309,7 +309,7 @@ void chip8::init()
 	clear_memory();
 
 	gfx = {};
-	key = {};
+	
 	
 	load_fontset(m_memory, chip8_fontset);	
 	
