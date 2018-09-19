@@ -15,7 +15,7 @@ Example of chip 8 fonts
 ****		11110000		0xF0
 
 */
-static array<uint8_t, 80> chip8_fontset =
+static std::array<uint8_t, 80> chip8_fontset =
 {
 	0xF0, 0x90, 0x90, 0x90, 0xF0, //0
 	0x20, 0x60, 0x20, 0x20, 0x70, //1
@@ -77,7 +77,7 @@ void chip8::emulateCycle()
 		{
 		
 		case 0x00E0: //Clears the screen.
-			gfx = {};
+			
 			drawFlag = true;
 			
 			break;
@@ -208,17 +208,45 @@ void chip8::emulateCycle()
 	case 0xD000: // Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a height of N pixels. 
 				 // Each row of 8 pixels is read as bit-coded starting from memory location I; I value doesn’t change after the execution of this instruction. 
 				 // As described above, VF is set to 1 if any screen pixels are flipped from set to unset when the sprite is drawn, and to 0 if that doesn’t happen		
+		uint8_t pixel;
+
+		m_V[0xF] = 0;
+
+		for (int yLine = 0; yLine < N; yLine++)
+		{
+			pixel = m_memory[m_index_register + yLine];
+
+			for (int xLine = 0; xLine < 8; xLine++)
+			{
+				if ((pixel & (0x80 >> xLine)) != 0)
+				{
+					if (m_screen.gfx[(m_V[X] + xLine + ((m_V[Y] + yLine)*64))] == 1)
+					{
+						m_V[0xF] = 1;
+					}
+					m_screen.gfx[(m_V[X] + xLine + ((m_V[Y] + yLine) * 64))] ^= 1;
+				}
+			}
+		}
+
+		drawFlag = true;		
 		break;
 
 	case 0xE000:
 		switch (NN)
 		{
-		case 0x009E:
-
+		case 0x009E: //Skips the next instruction if the key stored in VX is pressed. (Usually the next instruction is a jump to skip a code block)
+			if (m_keyboard.keyState[m_V[X]] == SDL_PRESSED)
+			{
+				m_program_counter += 2;
+			}			
 			break;
 
-		case 0X00A1:
-
+		case 0X00A1: //Skips the next instruction if the key stored in VX isn't pressed. (Usually the next instruction is a jump to skip a code block)
+			if (m_keyboard.keyState[m_V[X]] == SDL_RELEASED)
+			{
+				m_program_counter += 2;
+			}			
 			break;
 
 		default:
@@ -230,28 +258,54 @@ void chip8::emulateCycle()
 	case 0xF000:
 		switch (NN)
 		{
-		case 0x0007:
+		case 0x0007: //Sets VX to the value of the delay timer.
+			m_V[X] = m_delay_timer;
 			break;
 
-		case 0x000A:
+		case 0x000A: //	A key press is awaited, and then stored in VX. (Blocking Operation. All instruction halted until next key event)
+			{
+				bool keyPress = false;
+
+				for (int i = 0; i < 16; i++)
+				{
+					if (m_keyboard.keyState[i] != 0)
+					{
+						m_V[X] = i;
+						keyPress = true;
+					}
+				}
+
+				if (!keyPress)
+				{
+					return;
+				}
+			}
 			break;
 
-		case 0x0015:
+		case 0x0015: //Sets the delay timer to VX.
+			m_delay_timer = m_V[X];
 			break;
 
-		case 0x0018:
+		case 0x0018: //Sets the sound timer to VX.
+			m_sound_timer = m_V[X];
 			break;
 
-		case 0x001E:
+		case 0x001E: //Adds VX to I.
+			m_index_register += m_V[X];
 			break;
 
-		case 0x0029:
+		case 0x0029: //Sets I to the location of the sprite for the character in VX. Characters 0-F (in hexadecimal) are represented by a 4x5 font.
+			m_index_register += m_V[X] * 5;
 			break;
 
-		case 0x0033:
+		case 0x0033: /*Stores the binary-coded decimal representation of VX, with the most significant of three digits at the address in I, 
+					 the middle digit at I plus 1, and the least significant digit at I plus 2. (In other words, take the decimal representation of VX, 
+					 place the hundreds digit in memory at location in I, the tens digit at location I+1, and the ones digit at location I+2.)*/
 			break;
 
-		case 0x0055:
+		case 0x0055: //Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.
+			break;
+		case 0x0065: //	Fills V0 to VX (including VX) with values from memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.
 			break;
 		default:
 			std::cout << "Unknown opcode [0xF000]: 0x" << m_opcode << "\n";
@@ -308,7 +362,9 @@ void chip8::init()
 	clear_registers();
 	clear_memory();
 
-	gfx = {};
+	
+	
+	m_screen.clearGFx();
 	
 	
 	load_fontset(m_memory, chip8_fontset);	
@@ -319,7 +375,7 @@ void chip8::init()
 	drawFlag = true;
 }
 
-void chip8::load_fontset(array<uint8_t, 4096> memory, array<uint8_t, 80> fontset)
+void chip8::load_fontset(std::array<uint8_t, 4096> memory, std::array<uint8_t, 80> fontset)
 {
 	// load fontset to memory
 	for (int i = 0; i < sizeof(fontset); ++i)

@@ -11,9 +11,10 @@ std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> window::m_rendererPtr = st
 
 windowState window::m_windowState;
 
-window::window() : m_screenHeight(800), m_screenWidth(600) 
+
+window::window() : m_screenHeight(128), m_screenWidth(64) 
 {
-	window::m_windowState = windowState::PLAY;
+	window::m_windowState = windowState::PLAY;	
 }
 
 window::~window()
@@ -79,6 +80,14 @@ void window::setCurrentWindowState(windowState state)
 }
 
 
+uint8_t & window::operator()(int x, int y)
+{
+	assert(x >= 0 && x < m_screenWidth);
+	assert(y >= 0 && y < m_screenHeight);
+
+	return m_buffer[x + y * m_screenWidth];
+}
+
 void window::Clear()
 {	
 	SDL_RenderClear(m_rendererPtr.get());
@@ -101,4 +110,9 @@ void const window::PlayLoop() const
 	}	
 
 	window::Quit();
+}
+
+void const window::clearGFx()
+{
+	gfx = {};
 }

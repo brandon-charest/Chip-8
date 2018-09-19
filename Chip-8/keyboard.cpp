@@ -36,6 +36,7 @@ void keyboard::processInput()
 
 void keyboard::keyEvent(SDL_Keycode key, uint8_t keyEvent)
 {
+	// for debugging
 	auto temp = keyEvent == SDL_PRESSED ? "Pressed" : "Released";
 	switch (key)
 	{
