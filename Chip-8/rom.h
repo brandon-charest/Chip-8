@@ -1,23 +1,18 @@
 #pragma once
-#include <string>
-using std::string;
 #include <fstream>
+#include <iostream>
 class rom
 {
 public:
 	rom();
-	rom(string &filename);
 	~rom();
 
-	void openFile();
+	void LoadRomFile();
+	void LoadGame();
 
-	rom& operator=(rom& const r);
-	bool operator >> (uint8_t& c);
 private:
-	string m_filename;
-	std::ifstream m_file;
-	int m_pos;
-	int m_size;
-	char* m_buffer = nullptr;
+	std::ifstream file;
+	std::streampos size;
+	const std::string game = "Roms/INVADERS";
 };
 

@@ -1,42 +1,21 @@
 #include "rom.h"
 
-
-
 rom::rom()
 {
+	file.open(game, std::ios::in|std::ios::binary|std::ios::ate);
 }
-
-rom::rom(std::string & filename) : m_filename(filename)
-{
-}
-
 
 rom::~rom()
 {
-	if (m_buffer)
+	file.close();
+}
+
+void rom::LoadRomFile()
+{
+	if (file.is_open())
 	{
-		delete[] m_buffer;
+
 	}
 }
 
-void rom::openFile()
-{
-}
 
-rom& rom::operator=(rom& const r)
-{
-	if (this != &r)
-	{
-		this->m_filename = r.m_filename;
-	}
-
-	return *this;
-}
-
-bool rom::operator >> (uint8_t & c)
-{
-	c = m_buffer[m_pos];
-	++m_pos;
-
-	return m_pos < m_size;
-}

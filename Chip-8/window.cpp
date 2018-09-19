@@ -12,7 +12,7 @@ std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> window::m_rendererPtr = st
 windowState window::m_windowState;
 
 
-window::window() : m_screenHeight(128), m_screenWidth(64) 
+window::window() : m_screenHeight(64), m_screenWidth(128) 
 {
 	window::m_windowState = windowState::PLAY;	
 }
@@ -29,7 +29,7 @@ void const window::Init() const
 	}
 
 	//Creates window*
-	m_windowPtr.reset(SDL_CreateWindow("Chip 8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_screenWidth, m_screenHeight, SDL_WINDOW_OPENGL));
+	m_windowPtr.reset(SDL_CreateWindow("Chip 8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, (m_screenWidth * X_SCALE) / 2, (m_screenHeight * Y_SCALE) / 2, SDL_WINDOW_OPENGL));
 	if (m_windowPtr == nullptr)
 	{	
 		fatalError("SDL window could not be created!");
@@ -69,23 +69,9 @@ void const window::Quit() const
 	SDL_Quit();
 }
 
-windowState window::getCurrentWindowState()
-{
-	return window::m_windowState;
-}
-
 void window::setCurrentWindowState(windowState state)
 {
 	window::m_windowState = state;
-}
-
-
-uint8_t & window::operator()(int x, int y)
-{
-	assert(x >= 0 && x < m_screenWidth);
-	assert(y >= 0 && y < m_screenHeight);
-
-	return m_buffer[x + y * m_screenWidth];
 }
 
 void window::Clear()
@@ -106,6 +92,12 @@ void const window::PlayLoop() const
 	while (window::m_windowState != windowState::QUIT)
 	{
 		//myChip8.emulateCycle();
+
+		if (myChip8.drawFlag)
+		{
+			
+		}
+
 		keyboard.processInput();
 	}	
 

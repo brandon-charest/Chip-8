@@ -301,11 +301,24 @@ void chip8::emulateCycle()
 		case 0x0033: /*Stores the binary-coded decimal representation of VX, with the most significant of three digits at the address in I, 
 					 the middle digit at I plus 1, and the least significant digit at I plus 2. (In other words, take the decimal representation of VX, 
 					 place the hundreds digit in memory at location in I, the tens digit at location I+1, and the ones digit at location I+2.)*/
+			{
+				m_memory[m_index_register] = m_V[X] / 100;
+				m_memory[m_index_register + 1] = m_V[X] / 10 % 10;
+				m_memory[m_index_register + 2] = m_V[X] % 10;
+			}
 			break;
 
 		case 0x0055: //Stores V0 to VX (including VX) in memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.
+			for (int i = 0; i <= X; i++)
+			{
+				m_memory[m_index_register + i] = m_V[i];
+			}
 			break;
 		case 0x0065: //	Fills V0 to VX (including VX) with values from memory starting at address I. The offset from I is increased by 1 for each value written, but I itself is left unmodified.
+			for (int i = 0; i <= X; i++)
+			{
+				m_V[i] = m_memory[m_index_register + i];
+			}
 			break;
 		default:
 			std::cout << "Unknown opcode [0xF000]: 0x" << m_opcode << "\n";
@@ -317,13 +330,25 @@ void chip8::emulateCycle()
 		break;
 	}
 
+
+	if (m_delay_timer > 0)
+	{
+		--m_delay_timer;
+	}
+
+	if (m_sound_timer > 0)
+	{
+		make_beep();
+		--m_sound_timer;
+	}
+
 }
 
 void chip8::debugRender()
 {
 }
 
-void chip8::loadFromRom(string const fileName)
+void chip8::loadFromRom(std::string const fileName)
 {
 	
 }
@@ -355,18 +380,12 @@ void chip8::init()
 	// program counter starts at memory location 512 (0x200) 
 	m_program_counter = memory_start;
 	m_opcode = 0;
-	m_index_register = 0;
-	
+	m_index_register = 0;	
 
 	clear_stack();
 	clear_registers();
-	clear_memory();
-
-	
-	
-	m_screen.clearGFx();
-	
-	
+	clear_memory();	
+	m_screen.clearGFx();	
 	load_fontset(m_memory, chip8_fontset);	
 	
 	m_delay_timer = 0;
@@ -387,7 +406,7 @@ void chip8::load_fontset(std::array<uint8_t, 4096> memory, std::array<uint8_t, 8
 uint8_t chip8::random_number() const
 {
 	static std::mt19937 rng(std::random_device{}());
-	static std::uniform_real_distribution<float> dist(0.0, 255.0);
+	static std::uniform_real_distribution<double> dist(0.0, 255.0);
 
 	return dist(rng);
 }

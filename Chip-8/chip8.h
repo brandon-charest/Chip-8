@@ -14,21 +14,20 @@ public:
 
 	bool drawFlag;
 	void emulateCycle();
+	void init();
 	void debugRender();
-	void loadFromRom(string const fileName);
+	void loadFromRom(std::string const fileName);
 
 	static uint16_t const memory_start = 0x200;
 
 	uint8_t get_pixel(int x, int y);
 
 private:
-	
-
 	void make_beep();
 	void clear_stack();
 	void clear_registers();
 	void clear_memory();
-	void init();
+	
 	void load_fontset(std::array<uint8_t, 4096> memory, std::array<uint8_t, 80> fontset);
 
 	window m_screen;
