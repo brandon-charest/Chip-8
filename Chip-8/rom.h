@@ -1,18 +1,21 @@
 #pragma once
 #include <fstream>
 #include <iostream>
+#include <vector>
 class rom
 {
 public:
 	rom();
+	rom(std::string &fileName);
 	~rom();
 
 	void LoadRomFile();
-	void LoadGame();
-
+	std::vector<unsigned char> GetBuffer();
 private:
-	std::ifstream file;
-	std::streampos size;
-	const std::string game = "Roms/INVADERS";
+
+	std::vector<unsigned char> m_buffer;
+	std::ifstream m_file;
+	std::streampos m_size;
+	const std::string GAME = "Roms/INVADERS";
 };
 

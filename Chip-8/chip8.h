@@ -16,8 +16,7 @@ public:
 	void emulateCycle();
 	void init();
 	void debugRender();
-	void loadFromRom(std::string const fileName);
-
+	void loadRomToMemory(std::vector<char> mem);
 	static uint16_t const memory_start = 0x200;
 
 	uint8_t get_pixel(int x, int y);
@@ -27,7 +26,7 @@ private:
 	void clear_stack();
 	void clear_registers();
 	void clear_memory();
-	
+
 	void load_fontset(std::array<uint8_t, 4096> memory, std::array<uint8_t, 80> fontset);
 
 	window m_screen;

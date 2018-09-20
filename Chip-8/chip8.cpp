@@ -1,4 +1,5 @@
 #include "chip8.h"
+#include "rom.h"
 #include <iostream>
 #include <random>
 
@@ -348,9 +349,12 @@ void chip8::debugRender()
 {
 }
 
-void chip8::loadFromRom(std::string const fileName)
+void chip8::loadRomToMemory(std::vector<char> mem)
 {
-	
+	for (int i = 0; i < mem.size(); i++)
+	{
+		m_memory[i + 512] - mem[i];
+	}
 }
 
 void chip8::make_beep()
@@ -377,6 +381,7 @@ void chip8::clear_memory()
 
 void chip8::init()
 {
+	rom rom;
 	// program counter starts at memory location 512 (0x200) 
 	m_program_counter = memory_start;
 	m_opcode = 0;
@@ -387,7 +392,10 @@ void chip8::init()
 	clear_memory();	
 	m_screen.clearGFx();	
 	load_fontset(m_memory, chip8_fontset);	
-	
+
+	rom.LoadRomFile();
+	loadRomToMemory(rom.GetBuffer());
+
 	m_delay_timer = 0;
 	m_sound_timer = 0;
 
