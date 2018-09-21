@@ -10,10 +10,10 @@ public:
 	~rom();
 
 	void LoadRomFile();
-	std::vector<unsigned char> GetBuffer();
+	std::vector<char> GetBuffer();
 private:
 
-	std::vector<unsigned char> m_buffer;
+	std::vector<char> m_buffer;
 	std::ifstream m_file;
 	std::streampos m_size;
 	const std::string GAME = "Roms/INVADERS";

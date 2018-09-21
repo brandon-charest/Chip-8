@@ -3,11 +3,12 @@
 #include "errors.h"
 rom::rom()
 {
-	m_file.open(GAME, std::ios::in|std::ios::binary|std::ios::ate);
+	m_file.open(GAME, std::ios::in|std::ios::binary|std::ios::ate);	
 }
 
 rom::rom(std::string & fileName)
 {
+	m_file.open(fileName, std::ios::in | std::ios::binary | std::ios::ate);
 }
 
 rom::~rom()
@@ -17,16 +18,11 @@ rom::~rom()
 
 void rom::LoadRomFile()
 {
-
+	
 	if (m_file.is_open())
 	{
-		m_size = m_file.tellg();
-		m_buffer.push_back(m_size);
-		m_file.seekg(0, std::ios::beg);
-		m_file.read(m_buffer.data(), m_size);
-		m_file.close();
-
-		std::cout << "File load into memory success.\n";
+		std::vector<char> m_buffer((std::istreambuf_iterator<char>(m_file)), std::istreambuf_iterator<char>());		
+		std::cout << "File load into system memory.\n";
 	}
 	else
 	{
@@ -34,7 +30,7 @@ void rom::LoadRomFile()
 	}
 }
 
-std::vector<unsigned char> rom::GetBuffer()
+std::vector<char> rom::GetBuffer()
 {
 	return m_buffer;
 }

@@ -355,6 +355,7 @@ void chip8::loadRomToMemory(std::vector<char> mem)
 	{
 		m_memory[i + 512] - mem[i];
 	}
+	std::cout << "Successfully loaded into Chip8 memory" << "\n";
 }
 
 void chip8::make_beep()
@@ -380,8 +381,7 @@ void chip8::clear_memory()
 }
 
 void chip8::init()
-{
-	rom rom;
+{	
 	// program counter starts at memory location 512 (0x200) 
 	m_program_counter = memory_start;
 	m_opcode = 0;
