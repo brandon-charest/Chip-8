@@ -23,20 +23,28 @@ void rom::LoadRomFile()
 {
 
 	if (m_file.is_open())
-	{		
+	{
+		
 		m_file.seekg(0, std::ios_base::end);
 		m_size = m_file.tellg();
 		
-		m_buffer.resize(m_size);
+		if (m_size > chip8::MAX_MEMORY - 512)
+		{
+			fatalError("File is too large to load!");
+		}
+		else
+		{
+			m_buffer.resize(m_size);
 
-		m_file.seekg(0, std::ios::beg);
-		m_file.read(&m_buffer[0], m_size);
+			m_file.seekg(0, std::ios::beg);
+			m_file.read(&m_buffer[0], m_size);
 
-		std::cout << "File load into system memory.\n";
+			std::cout << "File load into system memory.\n";
+		}		
 	}
 	else
 	{
-		fatalError("Unable to load file.");
+		fatalError("Unable to load file!");
 	}
 }
 

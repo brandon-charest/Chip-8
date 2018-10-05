@@ -37,9 +37,10 @@ static std::array<uint8_t, 80> chip8_fontset =
 
 //Initialize static members
 uint16_t chip8::m_program_counter;
-std::array<uint8_t, 4096> chip8::m_memory;
+std::array<uint8_t, chip8::MAX_MEMORY> chip8::m_memory;
 std::stack<uint16_t> chip8::m_stack;
-std::array<uint8_t, 16> chip8::m_V;
+std::array<uint8_t, chip8::MAX_REGISTERS> chip8::m_V;
+bool chip8::drawFlag;
 
 chip8::chip8()
 {	
@@ -403,15 +404,15 @@ void chip8::play_loop()
 void chip8::init()
 {	
 	// program counter starts at memory location 512 (0x200) 
-	m_program_counter = memory_start;
+	m_program_counter = MEMORY_START;
 	m_opcode = 0;
 	m_index_register = 0;		
-	m_screen.clearGFx();
 
 	//Clear Data
 	clear_memory();
 	clear_stack();
 	clear_registers();
+	m_screen.clearGFx();
 
 	//Load Fontset
 	load_fontset(chip8_fontset);

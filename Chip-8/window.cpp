@@ -29,7 +29,17 @@ void window::Init()
 	}
 
 	//Creates window*
-	m_windowPtr.reset(SDL_CreateWindow("Chip 8", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, (m_screenWidth * X_SCALE) / 2, (m_screenHeight * Y_SCALE) / 2, SDL_WINDOW_OPENGL));
+	m_windowPtr.reset(
+		SDL_CreateWindow(
+			"Chip 8", 
+			SDL_WINDOWPOS_CENTERED, 
+			SDL_WINDOWPOS_CENTERED, 
+			(m_screenWidth * X_SCALE) / 2, 
+			(m_screenHeight * Y_SCALE) / 2, 
+			SDL_WINDOW_OPENGL
+		)
+	);
+
 	if (m_windowPtr == nullptr)
 	{
 		fatalError("SDL window could not be created!");
@@ -102,30 +112,33 @@ void window::Clear()
 
 void window::Update()
 {
-	SDL_RenderPresent(m_rendererPtr.get());
-}
+	SDL_SetRenderDrawColor(m_rendererPtr.get(), 0xFF, 0xFF, 0xFF, 0xFF);
 
-void window::PlayLoop()
-{
-	chip8 myChip8;
-	keyboard keyboard;
+	int rowNum;
 
-	while (window::m_windowState != windowState::QUIT)
+
+	for (int yCoOrd = 0; yCoOrd < 32; yCoOrd++)
 	{
-		myChip8.emulateCycle();
-
-		if (myChip8.drawFlag)
+		for (int xCoOrd = 0; xCoOrd < 64; xCoOrd++)
 		{
-
+			rowNum = yCoOrd * 64;
+			if (gfx[xCoOrd + rowNum] != 0)
+			{
+				SDL_RenderDrawPoint(m_rendererPtr.get(), xCoOrd, yCoOrd);
+			}
 		}
-
-		//keyboard.processInput();
 	}
-
-	window::Quit();
+	chip8::drawFlag = false;
 }
 
 void window::clearGFx()
 {
 	gfx.fill(0);
+}
+
+void window::Draw()
+{
+	Update();
+	SDL_RenderPresent(m_rendererPtr.get());
+	chip8::drawFlag = false;
 }

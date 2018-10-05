@@ -8,17 +8,22 @@
 
 class chip8
 {
+	
+
 public:
+
+	static constexpr uint16_t const MAX_MEMORY = 4096;
+	static constexpr uint8_t const MAX_REGISTERS = 16;
+	static constexpr uint16_t const MEMORY_START = 0x200;
+	static bool drawFlag;
+
 	chip8();
 	~chip8();
-
-	bool drawFlag;
+	
 	void emulateCycle();
 	void init();
 	void play_loop();
-	void debugRender();
-	
-	static uint16_t const memory_start = 0x200;
+	void debugRender();	
 
 	uint8_t get_pixel(int x, int y);
 
@@ -35,7 +40,7 @@ private:
 	rom m_rom;
 
 	// 4k memory
-	static std::array<uint8_t, 4096> m_memory;
+	static std::array<uint8_t, MAX_MEMORY> m_memory;
 	static uint16_t m_program_counter;	
 
 	//array<uint16_t, 16> m_stack;
@@ -43,7 +48,7 @@ private:
 
 	// Chip 8 has 15 8-bit general purpose registers.
 	// the 16th register is used for the carry flag.	
-	static std::array<uint8_t, 16> m_V;
+	static std::array<uint8_t, MAX_REGISTERS> m_V;
 
 	// Chip 8 has 35 opcodes
 	uint16_t m_opcode;
