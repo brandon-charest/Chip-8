@@ -30,29 +30,26 @@ private:
 	void loadRomToMemory(std::vector<char> &memblock);
 	void load_fontset(std::array<uint8_t, 80> fontset);
 
-	window m_screen;
-	
+	window m_screen;	
 	keyboard m_keyboard;
 	rom m_rom;
 
-	uint16_t m_program_counter;
-	// Chip 8 has 35 opcodes
-	uint16_t m_opcode;
-	uint16_t m_index_register;
-	uint16_t m_stack_pointer;	
+	// 4k memory
+	static std::array<uint8_t, 4096> m_memory;
+	static uint16_t m_program_counter;	
 
 	//array<uint16_t, 16> m_stack;
-	std::stack<uint16_t> m_stack;
+	static std::stack<uint16_t> m_stack;
 
 	// Chip 8 has 15 8-bit general purpose registers.
 	// the 16th register is used for the carry flag.	
-	std::array<uint8_t, 16> m_V;
+	static std::array<uint8_t, 16> m_V;
 
-	// 4k memory
-	std::array<uint8_t, 4096> m_memory;	
+	// Chip 8 has 35 opcodes
+	uint16_t m_opcode;
+	uint16_t m_index_register;
 	uint8_t m_delay_timer;
-	uint8_t m_sound_timer;	
-	
+	uint8_t m_sound_timer;		
 	uint8_t random_number() const;
 
 };

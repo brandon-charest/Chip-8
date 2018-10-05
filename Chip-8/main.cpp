@@ -1,10 +1,9 @@
 #include "window.h"
 #include "chip8.h"
-//TODO: Finish opcodes
-//TODO: Finish way to load roms
+
+//TODO: Fix OpCodes
 //TODO: Graphics rendering
 //TODO: Sound
-//TODO: create roms???
 
 int main(int argc, char *argv[])
 {

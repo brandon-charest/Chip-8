@@ -35,6 +35,12 @@ static std::array<uint8_t, 80> chip8_fontset =
 	0xF0, 0x80, 0xF0, 0x80, 0x80  //F
 };
 
+//Initialize static members
+uint16_t chip8::m_program_counter;
+std::array<uint8_t, 4096> chip8::m_memory;
+std::stack<uint16_t> chip8::m_stack;
+std::array<uint8_t, 16> chip8::m_V;
+
 chip8::chip8()
 {	
 	
@@ -49,8 +55,9 @@ chip8::~chip8()
 void chip8::emulateCycle()
 {
 	// Fetch opcode, opcode is two bytes
-	m_opcode = m_memory.data()[m_program_counter] << 8 | m_memory.data()[m_program_counter + 1];
-	//m_opcode = memory[pc] << 8 | memory[pc + 1];
+	//m_opcode = m_memory.data()[m_program_counter] << 8 | m_memory.data()[m_program_counter + 1];
+	m_opcode = m_memory[m_program_counter] << 8 | m_memory[m_program_counter + 1];
+
 	//  address
 	uint16_t  NNN = m_opcode & 0x0FFF;
 
@@ -86,10 +93,8 @@ void chip8::emulateCycle()
 			m_program_counter = m_stack.top();
 			m_stack.pop();			
 			break;
-		default:
-			int x;
-			std::cout << "Unknown opcode [0x0000]: 0x" << m_opcode << "\n";
-			//std::cin >> x;
+		default:			
+			std::cout << "Unknown opcode [0x0000]: 0x" << m_opcode << "\n";			
 			break;
 		}
 		break;
@@ -349,7 +354,7 @@ void chip8::debugRender()
 
 void chip8::loadRomToMemory(std::vector<char> &memblock)
 {
-	for (int i = 0; i < sizeof(memblock); i++)
+	for (int i = 0; i < memblock.size(); i++)
 	{
 		m_memory[i + 512] = memblock[i];
 	}
@@ -413,7 +418,7 @@ void chip8::init()
 
 	//Load Rom
 	m_rom.LoadRomFile();
-	loadRomToMemory(m_rom.m_buffer);
+	loadRomToMemory(m_rom.GetBuffer());
 	
 	m_delay_timer = 0;
 	m_sound_timer = 0;
@@ -424,7 +429,7 @@ void chip8::init()
 void chip8::load_fontset(std::array<uint8_t, 80> fontset)
 {
 	// load fontset to memory
-	for (int i = 0; i < sizeof(fontset); ++i)
+	for (int i = 0; i < fontset.size(); ++i)
 	{		
 		m_memory[i] = fontset[i];
 	}	

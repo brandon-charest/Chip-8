@@ -119,7 +119,7 @@ void window::PlayLoop()
 
 		}
 
-		keyboard.processInput();
+		//keyboard.processInput();
 	}
 
 	window::Quit();
@@ -127,5 +127,5 @@ void window::PlayLoop()
 
 void window::clearGFx()
 {
-	gfx = {};
+	gfx.fill(0);
 }
