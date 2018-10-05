@@ -3,7 +3,6 @@
 #include <iostream>
 #include <random>
 
-
 /*
 see http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.4 for more info
 
@@ -50,22 +49,22 @@ chip8::~chip8()
 void chip8::emulateCycle()
 {
 	// Fetch opcode, opcode is two bytes
-	m_opcode = m_memory[m_program_counter] << 8 | m_memory[m_program_counter + 1]; 
-
+	m_opcode = m_memory.data()[m_program_counter] << 8 | m_memory.data()[m_program_counter + 1];
+	//m_opcode = memory[pc] << 8 | memory[pc + 1];
 	//  address
-	uint16_t const NNN = m_opcode & 0x0FFF;
+	uint16_t  NNN = m_opcode & 0x0FFF;
 
 	// 8-bit constant
-	uint8_t const NN = m_opcode & 0x00FF;
+	uint8_t  NN = m_opcode & 0x00FF;
 
 	// 4-bit constant
-	uint8_t const N = m_opcode & 0x000F;
+	uint8_t  N = m_opcode & 0x000F;
 
 	// 4-bit register identifier
-	uint8_t const X = (m_opcode & 0x0F00) >> 8;
+	uint8_t  X = (m_opcode & 0x0F00) >> 8;
 
 	// 4-bit register identifier
-	uint8_t const Y = (m_opcode & 0x00F0) >> 4;
+	uint8_t  Y = (m_opcode & 0x00F0) >> 4;
 
 	m_program_counter += 2;
 
@@ -78,20 +77,19 @@ void chip8::emulateCycle()
 		{
 		
 		case 0x00E0: //Clears the screen.
-			
-			drawFlag = true;
-			
+			m_screen.clearGFx();
+			drawFlag = true;			
 			break;
-
 		
-		case 0x00EE: // Returns from subroutine			
-
+		case 0x00EE: // Returns from subroutine	
 			// Put the stored return address from the stack back into the program counter		
 			m_program_counter = m_stack.top();
 			m_stack.pop();			
 			break;
 		default:
+			int x;
 			std::cout << "Unknown opcode [0x0000]: 0x" << m_opcode << "\n";
+			//std::cin >> x;
 			break;
 		}
 		break;
@@ -349,11 +347,11 @@ void chip8::debugRender()
 {
 }
 
-void chip8::loadRomToMemory(std::vector<char> mem)
+void chip8::loadRomToMemory(std::vector<char> &memblock)
 {
-	for (int i = 0; i < mem.size(); i++)
+	for (int i = 0; i < sizeof(memblock); i++)
 	{
-		m_memory[i + 512] - mem[i];
+		m_memory[i + 512] = memblock[i];
 	}
 	std::cout << "Successfully loaded into Chip8 memory" << "\n";
 }
@@ -372,12 +370,29 @@ void chip8::clear_stack()
 
 void chip8::clear_registers()
 {
-	m_V = {};
+	m_V.fill(0);
 }
 
 void chip8::clear_memory()
 {
-	m_memory = {};
+	m_memory.fill(0);
+}
+
+void chip8::play_loop()
+{
+	while (m_screen.getCurrentWindowState() != windowState::QUIT)
+	{
+		chip8::emulateCycle();
+
+		if (drawFlag)
+		{
+
+		}
+
+		m_keyboard.processInput();
+	}
+
+	m_screen.Quit();
 }
 
 void chip8::init()
@@ -385,30 +400,34 @@ void chip8::init()
 	// program counter starts at memory location 512 (0x200) 
 	m_program_counter = memory_start;
 	m_opcode = 0;
-	m_index_register = 0;	
+	m_index_register = 0;		
+	m_screen.clearGFx();
 
+	//Clear Data
+	clear_memory();
 	clear_stack();
 	clear_registers();
-	clear_memory();	
-	m_screen.clearGFx();	
-	load_fontset(m_memory, chip8_fontset);	
 
-	rom.LoadRomFile();
-	loadRomToMemory(rom.GetBuffer());
+	//Load Fontset
+	load_fontset(chip8_fontset);
 
+	//Load Rom
+	m_rom.LoadRomFile();
+	loadRomToMemory(m_rom.m_buffer);
+	
 	m_delay_timer = 0;
 	m_sound_timer = 0;
 
 	drawFlag = true;
 }
 
-void chip8::load_fontset(std::array<uint8_t, 4096> memory, std::array<uint8_t, 80> fontset)
+void chip8::load_fontset(std::array<uint8_t, 80> fontset)
 {
 	// load fontset to memory
 	for (int i = 0; i < sizeof(fontset); ++i)
-	{
-		memory[i] = fontset[i];
-	}
+	{		
+		m_memory[i] = fontset[i];
+	}	
 }
 
 uint8_t chip8::random_number() const

@@ -7,12 +7,14 @@
 //TODO: create roms???
 
 int main(int argc, char *argv[])
-{	
+{
 	chip8 chip8;
-	window chipWindow;
+	window window;
 
+	window.Init();
 	chip8.init();
-	chipWindow.Init();
+	chip8.play_loop();
+
 
 	return 0;
 }

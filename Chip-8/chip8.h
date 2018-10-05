@@ -15,8 +15,9 @@ public:
 	bool drawFlag;
 	void emulateCycle();
 	void init();
+	void play_loop();
 	void debugRender();
-	void loadRomToMemory(std::vector<char> mem);
+	
 	static uint16_t const memory_start = 0x200;
 
 	uint8_t get_pixel(int x, int y);
@@ -26,11 +27,13 @@ private:
 	void clear_stack();
 	void clear_registers();
 	void clear_memory();
-
-	void load_fontset(std::array<uint8_t, 4096> memory, std::array<uint8_t, 80> fontset);
+	void loadRomToMemory(std::vector<char> &memblock);
+	void load_fontset(std::array<uint8_t, 80> fontset);
 
 	window m_screen;
+	
 	keyboard m_keyboard;
+	rom m_rom;
 
 	uint16_t m_program_counter;
 	// Chip 8 has 35 opcodes
@@ -48,11 +51,10 @@ private:
 	// 4k memory
 	std::array<uint8_t, 4096> m_memory;	
 	uint8_t m_delay_timer;
-	uint8_t m_sound_timer;
-
-	
+	uint8_t m_sound_timer;	
 	
 	uint8_t random_number() const;
+
 };
 
 
