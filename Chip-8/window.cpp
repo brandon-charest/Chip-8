@@ -12,7 +12,7 @@ std::unique_ptr<SDL_Renderer, void(*)(SDL_Renderer*)> window::m_rendererPtr = st
 windowState window::m_windowState;
 
 
-window::window() : m_screenHeight(64), m_screenWidth(128)
+window::window() 
 {
 	window::m_windowState = windowState::PLAY;
 }
@@ -34,9 +34,9 @@ void window::Init()
 			"Chip 8", 
 			SDL_WINDOWPOS_CENTERED, 
 			SDL_WINDOWPOS_CENTERED, 
-			(m_screenWidth * X_SCALE) / 2, 
-			(m_screenHeight * Y_SCALE) / 2, 
-			SDL_WINDOW_OPENGL
+			SCREEN_WIDTH * PIXEL_SIZE, 
+			SCREEN_HEIGHT * PIXEL_SIZE,
+			SDL_WINDOW_SHOWN
 		)
 	);
 
@@ -48,7 +48,7 @@ void window::Init()
 	{
 		// create renderer for window
 		m_rendererPtr.reset(SDL_CreateRenderer(m_windowPtr.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
-		SDL_RenderSetScale(m_rendererPtr.get(), X_SCALE, Y_SCALE);
+		SDL_RenderSetScale(m_rendererPtr.get(), PIXEL_SIZE, PIXEL_SIZE);
 
 		if (m_rendererPtr == nullptr)
 		{
@@ -69,18 +69,18 @@ void window::Init()
 	}
 
 
-	SDL_GLContext glContext = SDL_GL_CreateContext(m_windowPtr.get());
-	if (!glContext)
-	{
-		fatalError("SDL_GL Contect could not be created!");
-	}
+	//SDL_GLContext glContext = SDL_GL_CreateContext(m_windowPtr.get());
+	//if (!glContext)
+	//{
+	//	fatalError("SDL_GL Contect could not be created!");
+	//}
 
 	//handles extentions
-	GLenum error = glewInit();
-	if (error != GLEW_OK)
-	{
-		fatalError("Could not initialize glew!");
-	}
+	//GLenum error = glewInit();
+	//if (error != GLEW_OK)
+	//{
+	//	fatalError("Could not initialize glew!");
+	//}
 }
 
 

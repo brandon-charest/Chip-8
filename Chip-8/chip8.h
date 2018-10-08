@@ -15,6 +15,7 @@ public:
 	static constexpr uint16_t const MAX_MEMORY = 4096;
 	static constexpr uint8_t const MAX_REGISTERS = 16;
 	static constexpr uint16_t const MEMORY_START = 0x200;
+
 	static bool drawFlag;
 
 	chip8();
@@ -41,6 +42,7 @@ private:
 
 	// 4k memory
 	static std::array<uint8_t, MAX_MEMORY> m_memory;
+
 	static uint16_t m_program_counter;	
 
 	//array<uint16_t, 16> m_stack;
@@ -52,6 +54,7 @@ private:
 
 	// Chip 8 has 35 opcodes
 	uint16_t m_opcode;
+
 	uint16_t m_index_register;
 	uint8_t m_delay_timer;
 	uint8_t m_sound_timer;		

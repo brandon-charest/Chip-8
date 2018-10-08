@@ -3,7 +3,7 @@
 #include <iostream>
 
 keyboard::keyboard()
-{
+{	
 }
 
 
@@ -21,7 +21,7 @@ void keyboard::processInput()
 		{
 		case SDL_KEYDOWN:
 		case SDL_KEYUP:			
-			keyEvent(sdlEvent.key.keysym.sym, sdlEvent.key.state);
+			keyEvent(sdlEvent.key.keysym.scancode, sdlEvent.key.state);
 			break;
 
 		case SDL_QUIT:
@@ -34,91 +34,91 @@ void keyboard::processInput()
 	}
 }
 
-void keyboard::keyEvent(SDL_Keycode key, uint8_t keyEvent)
+void keyboard::keyEvent(SDL_Scancode code, uint8_t keyEvent)
 {
 	// for debugging
 	auto temp = keyEvent == SDL_PRESSED ? "Pressed" : "Released";
-	switch (key)
+	switch (code)
 	{
-	case SDLK_ESCAPE:
+	case SDL_SCANCODE_ESCAPE:
 		window::setCurrentWindowState(windowState::QUIT);
 		break;
 
-	case SDLK_x:		
+	case SDL_SCANCODE_X:
 		std::cout << "'X' is " << temp << "\n";
 		keyState[0x0] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_1:
+	case SDL_SCANCODE_1:
 		std::cout << "'1' is " << temp << "\n";
 		keyState[0x1] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_2:
+	case SDL_SCANCODE_2:
 		std::cout << "'2' is " << temp << "\n";
 		keyState[0x2] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_3:
+	case SDL_SCANCODE_3:
 		std::cout << "'3' is " << temp << "\n";
 		keyState[0x3] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_q:
+	case SDL_SCANCODE_Q:
 		std::cout << "'Q' is " << temp << "\n";
 		keyState[0x4] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_w:
+	case SDL_SCANCODE_W:
 		std::cout << "'W' is " << temp << "\n";
 		keyState[0x5] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_e:
+	caseSDL_SCANCODE_E:
 		std::cout << "'E' is " << temp << "\n";
 		keyState[0x6] = keyEventHelper(keyEvent);
 		break;
-	case SDLK_a:
+	case SDL_SCANCODE_A:
 		std::cout << "'A' is " << temp << "\n";
 		keyState[0x7] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_s:
+	case SDL_SCANCODE_S:
 		std::cout << "'S' is " << temp << "\n";
 		keyState[0x8] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_d:
+	case SDL_SCANCODE_D:
 		std::cout << "'D' is " << temp << "\n";
 		keyState[0x9] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_z:
+	case SDL_SCANCODE_Z:
 		std::cout << "'Z' is " << temp << "\n";
 		keyState[0xA] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_c:
+	case SDL_SCANCODE_C:
 		std::cout << "'C' is " << temp << "\n";
 		keyState[0xB] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_4:
+	case SDL_SCANCODE_4:
 		std::cout << "'4' is " << temp << "\n";
 		keyState[0xC] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_r:
+	case SDL_SCANCODE_R:
 		std::cout << "'R' is " << temp << "\n";
 		keyState[0xD] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_f:
+	case SDL_SCANCODE_F:
 		std::cout << "'F' is " << temp << "\n";
 		keyState[0xE] = keyEventHelper(keyEvent);
 		break;
 
-	case SDLK_v:
+	case SDL_SCANCODE_V:
 		std::cout << "'V' is " << temp << "\n";
 		keyState[0xF] = keyEventHelper(keyEvent);
 		break;

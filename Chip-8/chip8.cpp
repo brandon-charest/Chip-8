@@ -225,11 +225,11 @@ void chip8::emulateCycle()
 			{
 				if ((pixel & (0x80 >> xLine)) != 0)
 				{
-					if (m_screen.gfx[(m_V[X] + xLine + ((m_V[Y] + yLine)*64))] == 1)
-					{
-						m_V[0xF] = 1;
-					}
-					m_screen.gfx[(m_V[X] + xLine + ((m_V[Y] + yLine) * 64))] ^= 1;
+//					if (m_screen.gfx[(m_V[X] + xLine + ((m_V[Y] + yLine)*64))] == 1)
+//					{
+//						m_V[0xF] = 1;
+//					}
+//				m_screen.gfx[(m_V[X] + xLine + ((m_V[Y] + yLine) * 64))] ^= 1;
 				}
 			}
 		}

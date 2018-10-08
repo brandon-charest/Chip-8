@@ -1,9 +1,11 @@
 #include "window.h"
 #include "chip8.h"
 
-//TODO: Fix OpCodes
+//TODO: Fix Keyboard input array crashing
+//		seems to be caused by graphics rendering.....
 //TODO: Graphics rendering
 //TODO: Sound
+//TODO: Rom selection screen
 
 int main(int argc, char *argv[])
 {
